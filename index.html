@@ -521,7 +521,7 @@ html.js-anim .reveal.seen{opacity:1;transform:none}
           <div class="metrics-grid">
             <div class="metric"><span class="num" x-text="metric('stars')"></span><span class="lab" x-text="t.metrics.stars"></span></div>
             <div class="metric"><span class="num" x-text="metric('repos')"></span><span class="lab" x-text="t.metrics.repos"></span></div>
-            <div class="metric"><span class="num" x-text="metric('followers')"></span><span class="lab" x-text="t.metrics.followers"></span></div>
+            <div class="metric"><span class="num" x-text="metric('contributions')"></span><span class="lab" x-text="t.metrics.contributions"></span></div>
             <div class="metric"><span class="num" x-text="metric('issues')"></span><span class="lab" x-text="t.metrics.issues"></span></div>
             <div class="metric"><span class="num" x-text="metric('prs')"></span><span class="lab" x-text="t.metrics.prs"></span></div>
             <div class="metric"><span class="num" x-text="metric('commits')"></span><span class="lab" x-text="t.metrics.commits"></span></div>
@@ -784,7 +784,7 @@ function portfolio(){
     liveStatus:'loading',
     syncedAt:null,
     _poll:null,
-    live:{ stars:0, repos:0, followers:0, issues:0, prs:0, commits:0, languages:[], events:[], actions:[], repos_list:[] },
+    live:{ stars:0, repos:0, contributions:0, issues:0, prs:0, commits:0, languages:[], events:[], actions:[], repos_list:[] },
 
     init(){ this.loadAll(); },
 
@@ -810,7 +810,7 @@ function portfolio(){
 
     async loadMetrics(){
       const d=await this.api('/metrics'); if(!d) return false;
-      this.live.stars=d.stars||0; this.live.repos=d.repos||0; this.live.followers=d.followers||0;
+      this.live.stars=d.stars||0; this.live.repos=d.repos||0; this.live.contributions=d.contributions||0;
       this.live.issues=d.issues||0; this.live.prs=d.prs||0; this.live.commits=d.commits||0;
       this.live.languages=Array.isArray(d.languages)?d.languages:[];
       return true;
@@ -1088,7 +1088,7 @@ function portfolio(){
           },
           adr:{ sub:'Decisões de arquitetura que eu tomei em projetos práticos. Clique para abrir o raciocínio.' },
           sync:{ live:'feed', loading:'sincronizando...', offline:'offline' },
-          metrics:{ title:'Metricas do GitHub', stars:'estrelas', repos:'repositórios', followers:'seguidores', issues:'issues', prs:'pull requests', commits:'commits', offline:'Métricas indisponíveis no momento. Os dados aparecem quando a função proxy está no ar.' },
+          metrics:{ title:'Metricas do GitHub', stars:'estrelas', repos:'repositórios', contributions:'contribuições', issues:'issues', prs:'pull requests', commits:'commits', offline:'Métricas indisponíveis no momento. Os dados aparecem quando a função proxy está no ar.' },
           activity:{
             title:'Atividade recente', sub:'Eventos públicos do GitHub, quase em tempo real, atualizados a cada 30 segundos.',
             live:'monitor', offline:'Feed indisponível no momento. Aparece assim que a função proxy estiver publicada.',
@@ -1127,7 +1127,7 @@ function portfolio(){
           },
           adr:{ sub:'Architecture decisions I made on hands-on projects. Click to open the reasoning.' },
           sync:{ live:'live', loading:'syncing...', offline:'offline' },
-          metrics:{ title:'GitHub metrics', stars:'stars', repos:'repos', followers:'followers', issues:'issues', prs:'pull requests', commits:'commits', offline:'Metrics unavailable right now. Data shows up once the proxy function is live.' },
+          metrics:{ title:'GitHub metrics', stars:'stars', repos:'repos', contributions:'contributions', issues:'issues', prs:'pull requests', commits:'commits', offline:'Metrics unavailable right now. Data shows up once the proxy function is live.' },
           activity:{
             title:'Recent activity', sub:'Public GitHub events, near real time, refreshed every 30 seconds.',
             live:'live feed', offline:'Feed unavailable right now. It shows up once the proxy function is deployed.',

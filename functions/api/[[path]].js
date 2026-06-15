@@ -27,6 +27,37 @@ async function gh(path, env) {
   return res.json();
 }
 
+async function ghGraphql(query, variables, env) {
+  const res = await fetch(GH + '/graphql', {
+    method: 'POST',
+    headers: {
+      'authorization': 'Bearer ' + env.GITHUB_TOKEN,
+      'accept': 'application/json',
+      'content-type': 'application/json',
+      'user-agent': 'yurivski-portfolio',
+    },
+    body: JSON.stringify({ query: query, variables: variables || {} }),
+  });
+  if (!res.ok) {
+    const err = new Error('github graphql ' + res.status);
+    err.status = res.status;
+    throw err;
+  }
+  return res.json();
+}
+
+async function getContributionsTotal(user, env) {
+  try {
+    const q = 'query($login:String!){user(login:$login){contributionsCollection{contributionCalendar{totalContributions}}}}';
+    const data = await ghGraphql(q, { login: user }, env);
+    const total = data && data.data && data.data.user
+      && data.data.user.contributionsCollection
+      && data.data.user.contributionsCollection.contributionCalendar
+      && data.data.user.contributionsCollection.contributionCalendar.totalContributions;
+    return typeof total === 'number' ? total : 0;
+  } catch (e) { return 0; }
+}
+
 async function getOwnedRepos(user, env) {
   const repos = await gh('/users/' + user + '/repos?per_page=100&type=owner&sort=pushed', env);
   return repos.filter(function (r) { return !r.fork && !r.archived; });
@@ -209,6 +240,7 @@ async function handleMetrics(user, env) {
     searchCount('/search/issues?q=' + encodeURIComponent('author:' + user + ' type:issue') + '&per_page=1', env),
     searchCount('/search/issues?q=' + encodeURIComponent('author:' + user + ' type:pr') + '&per_page=1', env),
     searchCount('/search/commits?q=' + encodeURIComponent('author:' + user) + '&per_page=1', env),
+    getContributionsTotal(user, env),
   ]);
 
   return {
@@ -219,6 +251,7 @@ async function handleMetrics(user, env) {
     issues: counts[0],
     prs: counts[1],
     commits: counts[2],
+    contributions: counts[3],
     languages: languages,
   };
 }
