@@ -1,11 +1,5 @@
 <div align="center">
 
-<br>
-
-<br>
-
-<br>
-
 ---
   <img src="./jian-yang.gif" alt="click" width="150" />
 
