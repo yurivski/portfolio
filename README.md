@@ -7,7 +7,7 @@
 <br>
 
 ---
-  <img src="./giphy.gif" alt="click" width="150" />
+  <img src="./jian-yang.gif" alt="click" width="150" />
 
   <h1>
     <a href="https://yuri-portfolio.pages.dev/">Link</a>
