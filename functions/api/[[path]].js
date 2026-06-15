@@ -174,6 +174,13 @@ async function getCodebergHealth(user, env) {
   } catch (e) { return []; }
 }
 
+async function searchCount(path, env) {
+  try {
+    const data = await gh(path, env);
+    return (data && typeof data.total_count === 'number') ? data.total_count : 0;
+  } catch (e) { return 0; }
+}
+
 async function handleMetrics(user, env) {
   const profile = await gh('/users/' + user, env);
   const repos = await getOwnedRepos(user, env);
@@ -198,7 +205,22 @@ async function handleMetrics(user, env) {
     .sort(function (a, b) { return b.bytes - a.bytes; })
     .slice(0, 8);
 
-  return { stars: stars, repos: repos.length, followers: profile.followers || 0, following: profile.following || 0, languages: languages };
+  const counts = await Promise.all([
+    searchCount('/search/issues?q=' + encodeURIComponent('author:' + user + ' type:issue') + '&per_page=1', env),
+    searchCount('/search/issues?q=' + encodeURIComponent('author:' + user + ' type:pr') + '&per_page=1', env),
+    searchCount('/search/commits?q=' + encodeURIComponent('author:' + user) + '&per_page=1', env),
+  ]);
+
+  return {
+    stars: stars,
+    repos: repos.length,
+    followers: profile.followers || 0,
+    following: profile.following || 0,
+    issues: counts[0],
+    prs: counts[1],
+    commits: counts[2],
+    languages: languages,
+  };
 }
 
 async function handleRepos(user, env) {
