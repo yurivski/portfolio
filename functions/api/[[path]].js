@@ -57,7 +57,7 @@ function normalizeGithubEvent(e) {
     repo: repo,
     url: url,
     created_at: e.created_at,
-    count: e.type === 'PushEvent' ? (p.size || 0) : 0,
+    count: e.type === 'PushEvent' ? ((Array.isArray(p.commits) ? p.commits.length : 0) || p.size || p.distinct_size || 0) : 0,
     number: number,
     ref_type: p.ref_type || null,
     source: 'github',

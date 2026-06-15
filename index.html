@@ -444,7 +444,7 @@ html.js-anim .reveal.seen{opacity:1;transform:none}
     <p class="lede" x-html="t.hero.lede"></p>
 
     <div class="sec-head" style="margin-top:36px">
-      <span class="idx">04</span>
+      <span class="idx">01</span>
       <div>
         <h2 x-text="t.activity.title"></h2>
         <p x-text="t.activity.sub"></p>
@@ -540,7 +540,7 @@ html.js-anim .reveal.seen{opacity:1;transform:none}
 <div class="wrap">
   <section class="reveal">
     <div class="sec-head">
-      <span class="idx">01</span>
+      <span class="idx">02</span>
       <div>
         <h2 x-text="t.projects.title"></h2>
         <p x-text="t.projects.sub"></p>
@@ -588,32 +588,6 @@ html.js-anim .reveal.seen{opacity:1;transform:none}
       </template>
     </div>
     <p style="font-family:var(--f-mono);font-size:11.5px;color:var(--muted-2);margin-top:18px" x-show="filtered().length===0" x-text="t.projects.empty"></p>
-  </section>
-</div>
-
-<hr class="divider">
-
-<div class="wrap">
-  <section class="reveal">
-    <div class="sec-head">
-      <span class="idx">02</span>
-      <div>
-        <h2>Architecture Decisions</h2>
-        <p x-text="t.adr.sub"></p>
-      </div>
-    </div>
-    <div class="adr">
-      <template x-for="(d,i) in decisions" :key="i">
-        <details>
-          <summary>
-            <span class="q" x-text="'Q'+String(i+1).padStart(2,'0')"></span>
-            <span x-text="d.q[lang]"></span>
-            <span class="plus">+</span>
-          </summary>
-          <div class="ans" x-text="d.a[lang]"></div>
-        </details>
-      </template>
-    </div>
   </section>
 </div>
 
@@ -779,7 +753,7 @@ function portfolio(){
       codeberg:'https://codeberg.org/yurivski',
       devto:'https://dev.to/yurilbrok',
       email:'yuripontes.cont@gmail.com',
-      cv:'./curriculo-v.publica_yuri-jr-data-eng.pdf'
+      cv:'./curriculo-v.publica_yuri-jr-data-eng.pdf',
     },
 
     heroStack:['Python','SQL','PostgreSQL','PySpark','Delta Lake','Docker','AWS','DuckDB'],
@@ -888,7 +862,7 @@ function portfolio(){
     eventLabel(ev){
       const pt=this.lang==='pt'; const repo=ev.repo||''; const n=ev.number?(' #'+ev.number):'';
       switch(ev.action){
-        case 'push':    return pt ? ('enviou '+ev.count+' commit'+(ev.count===1?'':'s')+' para '+repo) : ('pushed '+ev.count+' commit'+(ev.count===1?'':'s')+' to '+repo);
+        case 'push':    return pt ? ('fez push em '+repo) : ('pushed to '+repo);
         case 'pr':      return pt ? ('pull request'+n+' em '+repo) : ('pull request'+n+' in '+repo);
         case 'issue':   return pt ? ('issue'+n+' em '+repo) : ('issue'+n+' in '+repo);
         case 'comment': return pt ? ('comentou em '+repo) : ('commented on '+repo);
@@ -953,11 +927,7 @@ function portfolio(){
     },
     mergedProjects(){
       const base=this.projects.map(p=>{ const lr=this.repoByName(p.id); return Object.assign({},p,{ stars: lr?(lr.stars||0):(p.stars||0) }); });
-      const ids={}; this.projects.forEach(p=>{ ids[p.id]=true; });
-      const extra=[];
-      (this.live.repos_list||[]).forEach(r=>{ const idn=(r.name||'').toLowerCase(); if(ids[idn]) return; extra.push(this.cardFromRepo(r)); });
-      extra.sort((a,b)=> (b.stars-a.stars) || a.name.localeCompare(b.name));
-      return base.concat(extra);
+      return base;
     },
 
     projects:[
@@ -1104,11 +1074,11 @@ function portfolio(){
             all:'Todos', featured:'Destaque', empty:'Nenhum projeto com essa stack ainda.'
           },
           adr:{ sub:'Decisões de arquitetura que eu tomei em projetos práticos. Clique para abrir o raciocínio.' },
-          sync:{ live:'ao vivo', loading:'sincronizando...', offline:'offline' },
+          sync:{ live:'feed', loading:'sincronizando...', offline:'offline' },
           metrics:{ title:'Metricas do GitHub', stars:'estrelas', repos:'repositórios', followers:'seguidores', offline:'Métricas indisponíveis no momento. Os dados aparecem quando a função proxy está no ar.' },
           activity:{
             title:'Atividade recente', sub:'Eventos públicos do GitHub, quase em tempo real, atualizados a cada 30 segundos.',
-            live:'feed ao vivo', offline:'Feed indisponível no momento. Aparece assim que a função proxy estiver publicada.',
+            live:'monitor', offline:'Feed indisponível no momento. Aparece assim que a função proxy estiver publicada.',
             empty:'Sem atividade pública recente.'
           },
           health:{
@@ -1122,11 +1092,11 @@ function portfolio(){
             footOff:'Mostrando dados de demonstração. O status real aparece quando a função proxy está publicada.'
           },
           cv:{
-            title:'Curriculo', sub:'Versão pública resumida da stack, sem dados pessoais.',
+            title:'Currículo', sub:'Versão pública resumida da stack.',
             button:'Baixar currículo resumido',
             note:'Currículo resumido. Para a versão completa, solicite via email: <a href="mailto:yuripontes.cont@gmail.com">yuripontes.cont@gmail.com</a>.'
           },
-          footer:{ sig:'Yuri Pontes · Rio de Janeiro · sempre compilando' }
+          footer:{ sig:'Yuri Pontes · "The pipeline is the path of light; security is the sentinel against chaos."' }
         },
         en:{
           nav:{contact:'Contact', cv:'Resume'},
